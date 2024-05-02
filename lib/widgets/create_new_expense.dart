@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CreateNewExpense extends StatefulWidget {
   const CreateNewExpense({super.key});
@@ -29,12 +30,17 @@ class _CreateNewState extends State<CreateNewExpense> {
             maxLength: 50,
             decoration: const InputDecoration(label: Text("Title")),
           ),
-          TextField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-                prefixText: "Rs. ", label: Text("Amount")),
-          ),
+          Expanded(
+              child: Row(
+            children: [
+              TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                    prefixText: "Rs. ", label: Text("Amount")),
+              ),
+            ],
+          )),
           Row(
             children: [
               ElevatedButton(

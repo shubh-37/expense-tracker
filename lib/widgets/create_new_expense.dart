@@ -1,5 +1,8 @@
+import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+
+final formatter = DateFormat.yMd();
 
 class CreateNewExpense extends StatefulWidget {
   const CreateNewExpense({super.key});
@@ -10,6 +13,7 @@ class CreateNewExpense extends StatefulWidget {
 }
 
 class _CreateNewState extends State<CreateNewExpense> {
+  DateTime? _selectedDate;
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   @override
@@ -17,6 +21,19 @@ class _CreateNewState extends State<CreateNewExpense> {
     _amountController.dispose();
     _titleController.dispose();
     super.dispose();
+  }
+
+  void _showCalender() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+    final selectedDate = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+    setState(() {
+      _selectedDate = selectedDate;
+    });
   }
 
   @override
@@ -30,17 +47,31 @@ class _CreateNewState extends State<CreateNewExpense> {
             maxLength: 50,
             decoration: const InputDecoration(label: Text("Title")),
           ),
-          Expanded(
-              child: Row(
+          Row(
             children: [
-              TextField(
+              Expanded(
+                  child: TextField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                     prefixText: "Rs. ", label: Text("Amount")),
-              ),
+              )),
+              const SizedBox(width: 20),
+              Expanded(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(_selectedDate == null
+                      ? 'No selected Date'
+                      : formatter.format(_selectedDate!)),
+                  IconButton(
+                      onPressed: _showCalender,
+                      icon: const Icon(Icons.calendar_month))
+                ],
+              ))
             ],
-          )),
+          ),
           Row(
             children: [
               ElevatedButton(
@@ -49,7 +80,11 @@ class _CreateNewState extends State<CreateNewExpense> {
                     print(_amountController.text);
                   },
                   child: const Text('Submit')),
-              ElevatedButton(onPressed: () {}, child: const Text('Cancel'))
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel'))
             ],
           )
         ],

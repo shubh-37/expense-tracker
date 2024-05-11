@@ -16,6 +16,8 @@ class _CreateNewState extends State<CreateNewExpense> {
   DateTime? _selectedDate;
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  Category _selectedCategory = Category.leisure;
+
   @override
   void dispose() {
     _amountController.dispose();
@@ -72,8 +74,28 @@ class _CreateNewState extends State<CreateNewExpense> {
               ))
             ],
           ),
+          const SizedBox(
+            height: 20,
+          ),
           Row(
             children: [
+              DropdownButton(
+                  value: _selectedCategory,
+                  items: Category.values
+                      .map((category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category.name.toUpperCase()),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  }),
+              const Spacer(),
               ElevatedButton(
                   onPressed: () {
                     print(_titleController.text);

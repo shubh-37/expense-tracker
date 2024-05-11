@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 final formatter = DateFormat.yMd();
 
 class CreateNewExpense extends StatefulWidget {
-  const CreateNewExpense({super.key});
+  const CreateNewExpense({super.key, required this.onAddExpense});
+  final void Function(Expense expense) onAddExpense;
   @override
   State<CreateNewExpense> createState() {
     return _CreateNewState();
@@ -38,10 +39,39 @@ class _CreateNewState extends State<CreateNewExpense> {
     });
   }
 
+  void _submitExpense() {
+    final amountEntered = double.tryParse(_amountController.text);
+    final isAmountInvalid = amountEntered == null || amountEntered <= 0;
+    if (_titleController.text.trim().isEmpty ||
+        isAmountInvalid ||
+        _selectedDate == null) {
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: const Text('Invalid input!'),
+                content: const Text(
+                    'Please make sure a valid title, amount, date and category was entered.'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('Okay'))
+                ],
+              ));
+      return;
+    }
+    widget.onAddExpense(Expense(
+        title: _titleController.text,
+        amount: amountEntered,
+        date: _selectedDate!,
+        category: _selectedCategory));
+  }
+
   @override
   Widget build(context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
       child: Column(
         children: [
           TextField(
@@ -98,8 +128,8 @@ class _CreateNewState extends State<CreateNewExpense> {
               const Spacer(),
               ElevatedButton(
                   onPressed: () {
-                    print(_titleController.text);
-                    print(_amountController.text);
+                    _submitExpense();
+                    Navigator.pop(context);
                   },
                   child: const Text('Submit')),
               ElevatedButton(

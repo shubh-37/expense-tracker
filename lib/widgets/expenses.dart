@@ -38,8 +38,24 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+  }
+
   @override
   Widget build(context) {
+    Widget mainContent =
+        const Center(child: Text('Go spend some money, live a little :)'));
+    if (_registeredExpenses.isNotEmpty) {
+      setState(() {
+        mainContent = ExpensesList(
+          expenses: _registeredExpenses,
+          removeExpense: _removeExpense,
+        );
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text("Flutter Expense Tracker"),
@@ -49,10 +65,7 @@ class _ExpensesState extends State<Expenses> {
         ],
       ),
       body: Column(
-        children: [
-          const Text('The chart'),
-          Expanded(child: ExpensesList(expenses: _registeredExpenses))
-        ],
+        children: [const Text('The chart'), Expanded(child: mainContent)],
       ),
     );
   }

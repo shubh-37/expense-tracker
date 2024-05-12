@@ -132,6 +132,9 @@ class _CreateNewState extends State<CreateNewExpense> {
                     Navigator.pop(context);
                   },
                   child: const Text('Submit')),
+              const SizedBox(
+                width: 10,  
+              ),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);

@@ -1,4 +1,5 @@
 import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/widgets/charts/chart.dart';
 import 'package:expense_tracker/widgets/create_new_expense.dart';
 import 'package:expense_tracker/widgets/expense_list/expenses_list.dart';
 import 'package:flutter/material.dart';
@@ -71,14 +72,17 @@ class _ExpensesState extends State<Expenses> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Flutter Expense Tracker"),
+        title: const Text("Expense Tracker"),
         actions: [
           IconButton(
               onPressed: _showAddExpenseOverlay, icon: const Icon(Icons.add))
         ],
       ),
       body: Column(
-        children: [const Text('The chart'), Expanded(child: mainContent)],
+        children: [
+          Chart(expenses: _registeredExpenses),
+          Expanded(child: mainContent)
+        ],
       ),
     );
   }
